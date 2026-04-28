@@ -1,36 +1,30 @@
 {
-    "name": "laravel-rocket/foundation",
+    "name": "enzan-koubou/laravel-rocket-foundation",
     "description": "Core Components of Laravel Rocket",
     "type": "library",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Takaaki Mizuno",
-            "email": "takaaki.mizuno@gmail.com"
-        }
-    ],
     "require": {
-        "php": "^8.2",
-        "laravel/tinker": "^2.9",
-        "icanboogie/inflector": "^2.2",
-        "aws/aws-sdk-php": "^3.321",
+        "php": "^8.3",
+        "laravel/tinker": "^3.0.2",
+        "icanboogie/inflector": "^4.0.0",
+        "aws/aws-sdk-php": "^3.379.6",
         "rainner/restful-php": "^1.0",
-        "jolicode/slack-php-api": "^4.7",
+        "jolicode/slack-php-api": "^4.9.0",
         "ext-imagick": "*"
     },
     "require-dev": {
-        "filp/whoops": "~2.0",
-        "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^10.1",
-        "symfony/thanks": "^1.0",
-        "mockery/mockery": "~1.0",
-        "friendsofphp/php-cs-fixer": "^3.25",
-        "fakerphp/faker": "^1.23",
-        "maatwebsite/excel": "~3.1.0",
-        "laravel/framework": "^11.9",
-        "laravel/browser-kit-testing": "^7.2",
-        "nunomaduro/collision": "^8.0",
-        "laravel/pint": "^1.17"
+        "filp/whoops": "~2.18.4",
+        "phpstan/phpstan": "^2.1.51",
+        "phpunit/phpunit": "^13.1.7",
+        "symfony/thanks": "^1.4.1",
+        "mockery/mockery": "~1.6.12",
+        "friendsofphp/php-cs-fixer": "^3.95.1",
+        "fakerphp/faker": "^1.24.1",
+        "maatwebsite/excel": "~3.1.68",
+        "laravel/framework": "^13.6.0",
+        "laravel/browser-kit-testing": "^7.2.8",
+        "nunomaduro/collision": "^8.9.4",
+        "laravel/pint": "^1.29.1"
     },
     "autoload": {
         "psr-4": {
