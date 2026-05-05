@@ -1,8 +1,12 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories\Eloquent;
+declare(strict_types=1);
 
-use LaravelRocket\Foundation\Repositories\RelationModelRepositoryInterface;
+namespace EnzanRocket\Foundation\Repositories\Eloquent;
+
+use EnzanRocket\Foundation\Models\Base;
+use EnzanRocket\Foundation\Repositories\RelationModelRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class RelationModelRepository extends SingleKeyModelRepository implements RelationModelRepositoryInterface
 {
@@ -15,12 +19,12 @@ class RelationModelRepository extends SingleKeyModelRepository implements Relati
         return [$this->parentKey, $this->childKey];
     }
 
-    public function findByRelationKeys($parentKey, $childKey)
+    public function findByRelationKeys(int|string $parentId, int|string $childId): ?Base
     {
-        $query = $this->getBaseQuery();
-        $model = $query->where($this->getParentKey(), $parentKey)->where($this->getChildKey(), $childKey)->first();
-
-        return $model;
+        return $this->getBlankModel()->newQuery()
+            ->where($this->getParentKey(), $parentId)
+            ->where($this->getChildKey(), $childId)
+            ->first();
     }
 
     public function getParentKey(): string
@@ -33,24 +37,26 @@ class RelationModelRepository extends SingleKeyModelRepository implements Relati
         return $this->childKey;
     }
 
-    public function updateList($parentId, $childIds)
+    public function updateList(int|string $parentId, array $childIds): bool
     {
         $currentChildIds = $this->allByParentKey($parentId)->pluck($this->getChildKey())->toArray();
-        $deletes = array_diff($currentChildIds, $childIds);
-        $adds = array_diff($childIds, $currentChildIds);
+        $deletes         = array_diff($currentChildIds, $childIds);
+        $adds            = array_diff($childIds, $currentChildIds);
 
         if (count($deletes) > 0) {
-            $query = $this->getBaseQuery();
-            $query->where($this->getParentKey(), $parentId)->whereIn($this->getChildKey(), $deletes)->delete();
+            $this->getBlankModel()->newQuery()
+                ->where($this->getParentKey(), $parentId)
+                ->whereIn($this->getChildKey(), $deletes)
+                ->delete();
         }
 
         if (count($adds) > 0) {
             $parentKey = $this->getParentKey();
-            $childKey = $this->getChildKey();
+            $childKey  = $this->getChildKey();
             foreach ($adds as $childId) {
                 $this->create([
                     $parentKey => $parentId,
-                    $childKey => $childId,
+                    $childKey  => $childId,
                 ]);
             }
         }
@@ -58,11 +64,10 @@ class RelationModelRepository extends SingleKeyModelRepository implements Relati
         return true;
     }
 
-    public function allByParentKey($parentId)
+    public function allByParentKey(int|string $parentId): Collection
     {
-        $query = $this->getBaseQuery();
-        $models = $query->where($this->getParentKey(), $parentId)->get();
-
-        return $models;
+        return $this->getBlankModel()->newQuery()
+            ->where($this->getParentKey(), $parentId)
+            ->get();
     }
 }

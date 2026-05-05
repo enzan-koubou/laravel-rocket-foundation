@@ -1,9 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Helpers\Production;
+namespace EnzanRocket\Foundation\Helpers\Production;
 
 use Illuminate\Routing\UrlGenerator;
-use LaravelRocket\Foundation\Helpers\RedirectHelperInterface;
+use EnzanRocket\Foundation\Helpers\RedirectHelperInterface;
 
 class RedirectHelper implements RedirectHelperInterface
 {
@@ -16,6 +15,8 @@ class RedirectHelper implements RedirectHelperInterface
 
     /**
      * Create a new Redirector instance.
+     *
+     * @param \Illuminate\Routing\UrlGenerator $generator
      */
     public function __construct(UrlGenerator $generator)
     {

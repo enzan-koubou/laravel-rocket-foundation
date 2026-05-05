@@ -1,7 +1,8 @@
 <?php
+namespace EnzanRocket\Foundation\Services\Production;
 
-namespace LaravelRocket\Foundation\Services\Production;
+use EnzanRocket\Foundation\Services\BaseServiceInterface;
 
-use LaravelRocket\Foundation\Services\BaseServiceInterface;
-
-class BaseService implements BaseServiceInterface {}
+class BaseService implements BaseServiceInterface
+{
+}

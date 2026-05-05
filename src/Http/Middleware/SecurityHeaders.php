@@ -1,13 +1,14 @@
 <?php
-
-namespace LaravelRocket\Foundation\Http\Middleware;
+namespace EnzanRocket\Foundation\Http\Middleware;
 
 class SecurityHeaders
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     *
      * @return mixed
      */
     public function handle($request, \Closure $next)

@@ -1,12 +1,14 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories\Eloquent;
+declare(strict_types=1);
 
+namespace EnzanRocket\Foundation\Repositories\Eloquent;
+
+use EnzanRocket\Foundation\Models\Base;
+use EnzanRocket\Foundation\Repositories\BaseRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Arr;
-use LaravelRocket\Foundation\Models\Base;
-use LaravelRocket\Foundation\Repositories\BaseRepositoryInterface;
 
 class BaseRepository implements BaseRepositoryInterface
 {
@@ -20,7 +22,7 @@ class BaseRepository implements BaseRepositoryInterface
 
     public function getEmptyList(): Collection
     {
-        return new Collection;
+        return new Collection();
     }
 
     public function rules(): array
@@ -33,36 +35,28 @@ class BaseRepository implements BaseRepositoryInterface
         return [];
     }
 
-    public function all($order = null, $direction = null): Collection|\Illuminate\Support\Collection|iterable
+    public function all(?string $order = null, ?string $direction = null): Collection
     {
-        $query = $this->getBaseQuery();
-        if (! empty($order)) {
+        $model = $this->getBlankModel();
+        if (!empty($order)) {
             $direction = empty($direction) ? 'asc' : $direction;
-            $query = $query->orderBy($order, $direction);
+            $model     = $model->orderBy($order, $direction);
         }
 
-        $query = $this->queryOptions($query);
+        return $model->get();
+    }
+
+    public function allByFilter(array $filter, ?string $order = null, ?string $direction = null): Collection
+    {
+        $query = $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter);
+        $query = $this->buildOrder($query, $filter, $order, $direction);
 
         return $query->get();
     }
 
-    public function allByFilterQuery($filter, $order = null, $direction = null): Builder|\Illuminate\Database\Eloquent\Builder
+    public function allByFilterWithTrashed(array $filter, ?string $order = null, ?string $direction = null): Collection
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-
-        return $this->buildOrder($query, $filter, $order, $direction);
-    }
-
-    public function allByFilter($filter, $order = null, $direction = null): Collection|\Illuminate\Support\Collection|iterable
-    {
-        $query = $this->allByFilterQuery($filter, $order, $direction);
-
-        return $query->get();
-    }
-
-    public function allByFilterWithTrashed($filter, $order = null, $direction = null): Collection|\Illuminate\Support\Collection|iterable
-    {
-        $query = $this->buildQueryByFilter($this->getBlankModel(), $filter);
+        $query = $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter);
         $query = $this->buildOrder($query, $filter, $order, $direction);
 
         return $query->withTrashed()->get();
@@ -70,134 +64,97 @@ class BaseRepository implements BaseRepositoryInterface
 
     public function getModelClassName(): string
     {
-        $model = $this->getBlankModel();
-
-        return get_class($model);
+        return get_class($this->getBlankModel());
     }
 
     public function getBlankModel(): Base
     {
-        return new Base;
+        return new Base();
     }
 
-    public function getBaseQuery(): Base
+    public function allEnabled(?string $order = null, ?string $direction = null): Collection
     {
-        return $this->getBlankModel();
-    }
-
-    public function allEnabled($order = null, $direction = null): Collection|\Traversable|array|\Illuminate\Support\Collection
-    {
-        $model = $this->getBaseQuery();
+        $model = $this->getBlankModel();
         $query = $model->where('is_enabled', '=', true);
-        if (! empty($order)) {
+        if (!empty($order)) {
             $direction = empty($direction) ? 'asc' : $direction;
-            $query = $query->orderBy($order, $direction);
+            $query     = $query->orderBy($order, $direction);
         }
-
-        $query = $this->queryOptions($query);
 
         return $query->get();
     }
 
-    public function get($order = 'id', $direction = 'asc', $offset = 0, $limit = 20, $before = 0, $after = 0): Collection|\Traversable|array|\Illuminate\Support\Collection
+    public function get(string $order = 'id', string $direction = 'asc', int $offset = 0, int $limit = 20): Collection
     {
-        $query = $this->getBaseQuery();
+        $model = $this->getBlankModel();
 
-        $query = $this->setBefore($query, $order, $direction, $before);
-        $query = $this->setAfter($query, $order, $direction, $after);
-        $query = $this->queryOptions($query);
-
-        return $query->orderBy($order, $direction)->skip($offset)->take($limit)->get();
+        return $model->orderBy($order, $direction)->skip($offset)->take($limit)->get();
     }
 
-    public function getByFilter($filter, $order = 'id', $direction = 'asc', $offset = 0, $limit = 20, $before = 0, $after = 0): Collection|\Traversable|array|\Illuminate\Support\Collection
+    public function getByFilter(array $filter, ?string $order = 'id', ?string $direction = 'asc', ?int $offset = 0, ?int $limit = 20): Collection
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-        $query = $this->setBefore($query, $order, $direction, $before);
-        $query = $this->setAfter($query, $order, $direction, $after);
-        $query = $this->buildOrder($query, $filter, $order, $direction);
+        $query = $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter);
+        $query = $this->buildOrder($query, $filter, $order ?? 'id', $direction ?? 'asc');
 
-        return $query->skip($offset)->take($limit)->get();
+        return $query->skip($offset ?? 0)->take($limit ?? 20)->get();
     }
 
-    public function getByFilterWithTrashed($filter, $order = 'id', $direction = 'asc', $offset = 0, $limit = 20, $before = 0, $after = 0): Collection|\Traversable|array|\Illuminate\Support\Collection
+    public function getByFilterWithTrashed(array $filter, ?string $order = 'id', ?string $direction = 'asc', ?int $offset = 0, ?int $limit = 20): Collection
     {
-        $query = $this->buildQueryByFilter($this->getBlankModel(), $filter);
-        $query = $this->setBefore($query, $order, $direction, $before);
-        $query = $this->setAfter($query, $order, $direction, $after);
-        $query = $this->buildOrder($query, $filter, $order, $direction);
+        $query = $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter);
+        $query = $this->buildOrder($query, $filter, $order ?? 'id', $direction ?? 'asc');
 
-        return $query->withTrashed()->skip($offset)->take($limit)->get();
+        return $query->withTrashed()->skip($offset ?? 0)->take($limit ?? 20)->get();
     }
 
-    public function getEnabled($order = 'id', $direction = 'asc', $offset = 0, $limit = 20, $before = 0, $after = 0): array|\Illuminate\Support\Collection
+    public function getEnabled(string $order = 'id', string $direction = 'asc', int $offset = 0, int $limit = 20): Collection
     {
-        $query = $this->getBaseQuery();
-        $query = $this->setBefore($query, $order, $direction, $before);
-        $query = $this->setAfter($query, $order, $direction, $after);
-        $query = $this->queryOptions($query);
+        $model = $this->getBlankModel();
 
-        return $query->where('is_enabled', '=', true)->orderBy($order, $direction)->skip($offset)->take($limit)->get();
+        return $model->where('is_enabled', '=', true)->orderBy($order, $direction)->skip($offset)->take($limit)->get();
     }
 
-    public function count()
+    public function count(): int
     {
-        $model = $this->getBaseQuery();
-
-        return $model->count();
+        return $this->getBlankModel()->count();
     }
 
-    public function countByFilter($filter): int
+    public function countByFilter(array $filter): int
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-
-        return $query->count();
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->count();
     }
 
-    public function countEnabled()
+    public function countEnabled(): int
     {
-        $model = $this->getBaseQuery();
-
-        return $model->where('is_enabled', '=', true)->count();
+        return $this->getBlankModel()->where('is_enabled', '=', true)->count();
     }
 
-    public function firstByFilter($filter): \Illuminate\Database\Eloquent\Model|array|Base|Builder|\Illuminate\Database\Eloquent\Builder|null
+    public function firstByFilter(array $filter): ?Base
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-
-        return $query->first();
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->first();
     }
 
-    public function firstByFilterWithTrashed($filter): \Illuminate\Database\Eloquent\Model|array|Base|Builder|\Illuminate\Database\Eloquent\Builder|null
+    public function firstByFilterWithTrashed(array $filter): ?Base
     {
-        $query = $this->buildQueryByFilter($this->getBlankModel(), $filter);
-
-        return $query->withTrashed()->first();
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->withTrashed()->first();
     }
 
-    public function updateByFilter($filter, $values): int
+    public function updateByFilter(array $filter, array $values): int
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-        $count = $query->update($values);
-
-        return $count;
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->update($values);
     }
 
-    public function getSQLByFilter($filter): string
+    public function getSQLByFilter(array $filter): string
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-
-        return $query->toSql();
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->toSql();
     }
 
-    public function deleteByFilter($filter): int
+    public function deleteByFilter(array $filter): int
     {
-        $query = $this->buildQueryByFilter($this->getBaseQuery(), $filter);
-
-        return $query->delete();
+        return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->delete();
     }
 
-    public function pluck($collection, $value, $key = null): Collection|\Illuminate\Support\Collection
+    public function pluck(Collection $collection, string $value, ?string $key = null): Collection
     {
         $items = [];
         foreach ($collection as $model) {
@@ -211,56 +168,21 @@ class BaseRepository implements BaseRepositoryInterface
         return Collection::make($items);
     }
 
-    public function firstOrNew($attributes, $values = [])
+    public function firstOrNew(array $attributes, array $values = []): Base
     {
-        $model = $this->getBaseQuery();
-
-        return $model->firstOrNew($attributes, $values);
+        return $this->getBlankModel()->firstOrNew($attributes, $values);
     }
 
-    public function firstOrCreate($attributes, $values = [])
+    public function firstOrCreate(array $attributes, array $values = []): Base
     {
-        $model = $this->getBaseQuery();
-
-        return $model->firstOrCreate($attributes, $values);
+        return $this->getBlankModel()->firstOrCreate($attributes, $values);
     }
 
-    public function updateOrCreate($attributes, $values = [])
+    public function updateOrCreate(array $attributes, array $values = []): Base
     {
-        $model = $this->getBaseQuery();
-
-        return $model->updateOrCreate($attributes, $values);
+        return $this->getBlankModel()->updateOrCreate($attributes, $values);
     }
 
-    protected function setBefore(
-        Builder|\Illuminate\Database\Eloquent\Builder|Base $query,
-        string $order,
-        string $direction,
-        mixed $before): Builder|\Illuminate\Database\Eloquent\Builder|Base
-    {
-        if ($before == 0) {
-            return $query;
-        }
-
-        return $query->where($order, ($direction === 'desc' ? '>' : '<'), $before);
-    }
-
-    protected function setAfter(
-        Builder|\Illuminate\Database\Eloquent\Builder|Base $query,
-        string $order,
-        string $direction,
-        mixed $after): Builder|\Illuminate\Database\Eloquent\Builder|Base
-    {
-        if ($after == 0) {
-            return $query;
-        }
-
-        return $query->where($order, ($direction === 'desc' ? '<' : '>'), $after);
-    }
-
-    /**
-     * @param  int[]  $ids
-     */
     protected function getCacheKey(array $ids): string
     {
         $key = $this->cachePrefix;
@@ -272,65 +194,33 @@ class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * @param  Builder  $query
-     * @param  string[]  $orderCandidates
+     * Build a filtered query from an already-created Builder instance.
+     *
+     * Callers MUST pass $this->getBlankModel()->newQuery() (a fresh Builder).
+     * Child overrides apply custom filter conditions then call
+     * parent::buildQueryByFilter($query, $filter) — the Builder state is
+     * preserved across the override chain, preventing query pollution.
      */
-    protected function getWithQueryBuilder(
-        Builder|Base $query,
-        array $orderCandidates,
-        string $orderDefault,
-        string $order,
-        string $direction,
-        int $offset,
-        int $limit
-    ): \Illuminate\Support\Collection {
-        $order = strtolower($order);
-        $direction = strtolower($direction);
-        $offset = intval($offset);
-        $limit = intval($limit);
-        if (empty($orderCandidates)) {
-            $orderCandidates = [];
-        }
-        if (empty($orderDefault)) {
-            $orderDefault = 'id';
-        }
-        $order = in_array($order, $orderCandidates) ? $order : strtolower($orderDefault);
-        $direction = in_array($direction, ['asc', 'desc']) ? $direction : 'asc';
-
-        if ($limit <= 0) {
-            $limit = 10;
-        }
-        if ($offset < 0) {
-            $offset = 0;
-        }
-
-        $query = $this->buildOrder($query, [], $order, $direction);
-
-        $query = $this->queryOptions($query);
-
-        return $query->offset($offset)->limit($limit)->get();
-    }
-
-    protected function buildQueryByFilter(Builder|\Illuminate\Database\Eloquent\Builder|Base $query, array $filter): Builder|\Illuminate\Database\Eloquent\Builder|Base
+    protected function buildQueryByFilter(Builder $query, array $filter): Builder
     {
-        $tableName = $this->getBlankModel()->getTable();
+        $tableName = $query->getModel()->getTable();
 
         $query = $this->queryOptions($query);
 
         if (count($this->querySearchTargets) > 0 && array_key_exists('query', $filter)) {
             $searchWord = Arr::get($filter, 'query');
-            if (! empty($searchWord)) {
-                $query = $query->where(function ($q) use ($searchWord) {
+            if (!empty($searchWord)) {
+                $query = $query->where(function (Builder $q) use ($searchWord): void {
                     foreach ($this->querySearchTargets as $index => $target) {
                         if ($index === 0) {
-                            $q = $q->where($target, 'LIKE', '%'.$searchWord.'%');
+                            $q->where($target, 'LIKE', '%'.$searchWord.'%');
                         } else {
-                            $q = $q->orWhere($target, 'LIKE', '%'.$searchWord.'%');
+                            $q->orWhere($target, 'LIKE', '%'.$searchWord.'%');
                         }
                     }
                 });
+                unset($filter['query']);
             }
-            unset($filter['query']);
         }
 
         foreach ($filter as $column => $value) {
@@ -344,21 +234,17 @@ class BaseRepository implements BaseRepositoryInterface
         return $query;
     }
 
-    protected function buildOrder(
-        Builder|\Illuminate\Database\Eloquent\Builder|Base $query,
-        array $filter = [],
-        ?string $order = null,
-        ?string $direction = null
-    ): Builder|\Illuminate\Database\Eloquent\Builder|Base {
-        if (! empty($order)) {
+    protected function buildOrder(Builder $query, array $filter, ?string $order, ?string $direction): Builder
+    {
+        if (!empty($order)) {
             $direction = empty($direction) ? 'asc' : $direction;
-            $query = $query->orderBy($order, $direction);
+            $query     = $query->orderBy($order, $direction);
         }
 
         return $query;
     }
 
-    protected function queryOptions(Builder|\Illuminate\Database\Eloquent\Builder|Base $query): Builder|\Illuminate\Database\Eloquent\Builder|Base
+    protected function queryOptions(Builder $query): Builder
     {
         return $query;
     }

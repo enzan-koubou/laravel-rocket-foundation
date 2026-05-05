@@ -1,46 +1,49 @@
 <?php
-
-namespace LaravelRocket\Foundation\Helpers\Production;
+namespace EnzanRocket\Foundation\Helpers\Production;
 
 use Carbon\Carbon;
-use LaravelRocket\Foundation\Helpers\DateTimeHelperInterface;
+use EnzanRocket\Foundation\Helpers\DateTimeHelperInterface;
 
 class DateTimeHelper implements DateTimeHelperInterface
 {
     const PRESENTATION_TIME_ZONE_SESSION_KEY = 'presentation-time-zone';
 
-    public function setPresentationTimeZone(?string $timezone = null): void
+    public function setPresentationTimeZone($timezone = null)
     {
         session()->put(static::PRESENTATION_TIME_ZONE_SESSION_KEY, $timezone);
     }
 
-    public function clearPresentationTimeZone(): void
+    public function clearPresentationTimeZone()
     {
         session()->remove(static::PRESENTATION_TIME_ZONE_SESSION_KEY);
     }
 
-    public function dateTime(string $dateTimeStr, ?\DateTimeZone $timezoneFrom = null, ?\DateTimeZone $timezoneTo = null): Carbon
+    public function dateTime($dateTimeStr, \DateTimeZone $timezoneFrom = null, \DateTimeZone $timezoneTo = null)
     {
         $timezoneFrom = empty($timezoneFrom) ? $this->timezoneForPresentation() : $timezoneFrom;
-        $timezoneTo = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
+        $timezoneTo   = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
 
         return Carbon::parse($dateTimeStr, $timezoneFrom)->setTimezone($timezoneTo);
     }
 
-    public function dateTimeWithFormat(string $format, string $dateTimeStr, ?\DateTimeZone $timezoneFrom = null, ?\DateTimeZone $timezoneTo = null): Carbon
-    {
+    public function dateTimeWithFormat(
+        $format,
+        $dateTimeStr,
+        \DateTimeZone $timezoneFrom = null,
+        \DateTimeZone $timezoneTo = null
+    ) {
         $timezoneFrom = empty($timezoneFrom) ? $this->timezoneForPresentation() : $timezoneFrom;
-        $timezoneTo = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
+        $timezoneTo   = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
 
         return Carbon::createFromFormat($format, $dateTimeStr, $timezoneFrom)->setTimezone($timezoneTo);
     }
 
-    public function timezoneForPresentation(): \DateTimeZone
+    public function timezoneForPresentation()
     {
         return new \DateTimeZone($this->getPresentationTimeZoneString());
     }
 
-    public function getPresentationTimeZoneString(): string
+    public function getPresentationTimeZoneString()
     {
         $timezone = session()->get(static::PRESENTATION_TIME_ZONE_SESSION_KEY);
         if (empty($timezone)) {
@@ -50,12 +53,12 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $timezone;
     }
 
-    public function timezoneForStorage(): \DateTimeZone
+    public function timezoneForStorage()
     {
         return new \DateTimeZone(config('app.timezone'));
     }
 
-    public function fromTimestamp(int $timeStamp, ?\DateTimeZone $timezone = null): Carbon
+    public function fromTimestamp($timeStamp, \DateTimeZone $timezone = null)
     {
         $timezone = empty($timezone) ? $this->timezoneForStorage() : $timezone;
 
@@ -65,66 +68,66 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $datetime;
     }
 
-    public function formatDate(\DateTime $dateTime, ?\DateTimeZone $timezone = null): string
+    public function formatDate($dateTime, \DateTimeZone $timezone = null)
     {
         $viewDateTime = clone $dateTime;
-        $timezone = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
+        $timezone     = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
         $viewDateTime->setTimeZone($timezone);
 
         return $viewDateTime->format('Y-m-d');
     }
 
-    public function formatTime(\DateTime $dateTime, ?\DateTimeZone $timezone = null): string
+    public function formatTime($dateTime, \DateTimeZone $timezone = null)
     {
         $viewDateTime = clone $dateTime;
-        $timezone = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
+        $timezone     = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
         $viewDateTime->setTimeZone($timezone);
 
         return $viewDateTime->format('H:i');
     }
 
-    public function formatDateTime(?\DateTime $dateTime, string $format = 'Y-m-d H:i', ?\DateTimeZone $timezone = null): string
+    public function formatDateTime($dateTime, $format = 'Y-m-d H:i', \DateTimeZone $timezone = null)
     {
         if (empty($dateTime)) {
             $dateTime = $this->now();
         }
         $viewDateTime = clone $dateTime;
-        $timezone = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
+        $timezone     = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
         $viewDateTime->setTimeZone($timezone);
 
         return $viewDateTime->format($format);
     }
 
-    public function now(?\DateTimeZone $timezone = null): Carbon
+    public function now(\DateTimeZone $timezone = null)
     {
         $timezone = empty($timezone) ? $this->timezoneForStorage() : $timezone;
 
         return Carbon::now($timezone);
     }
 
-    public function getDateFormatByLocale(?string $locale = null): string
+    public function getDateFormatByLocale($locale = null)
     {
         return trans('config.datetime.format', 'Y-m-d');
     }
 
-    public function convertToStorageDateTime(string $dateTimeString): \DateTime
+    public function convertToStorageDateTime($dateTimeString)
     {
         $viewDateTime = new Carbon($dateTimeString, $this->timezoneForPresentation());
-        $dateTime = clone $viewDateTime;
+        $dateTime     = clone $viewDateTime;
         $dateTime->setTimeZone($this->timezoneForStorage());
 
         return $dateTime;
     }
 
-    public function changeToPresentationTimeZone(\DateTime $dateTime): \DateTime
+    public function changeToPresentationTimeZone($dateTime)
     {
         return $dateTime->setTimezone($this->timezoneForPresentation());
     }
 
-    public function getTimeDifferenceStringFromTimeZone(\DateTimeZone|string $timezone): string
+    public function getTimeDifferenceStringFromTimeZone($timezone)
     {
-        if (! ($timezone instanceof \DateTimeZone)) {
-            if (! is_string($timezone)) {
+        if (!($timezone instanceof \DateTimeZone)) {
+            if (!is_string($timezone)) {
                 $timezone = '';
             }
             try {

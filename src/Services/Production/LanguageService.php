@@ -1,22 +1,21 @@
 <?php
+namespace EnzanRocket\Foundation\Services\Production;
 
-namespace LaravelRocket\Foundation\Services\Production;
-
-use LaravelRocket\Foundation\Services\LanguageServiceInterface;
+use EnzanRocket\Foundation\Services\LanguageServiceInterface;
 
 class LanguageService extends BaseService implements LanguageServiceInterface
 {
-    public function normalize(string $language): string
+    public function normalize($language)
     {
         $language = strtolower($language);
-        if (! array_key_exists($language, config('locale.languages'))) {
+        if (!array_key_exists($language, config('locale.languages'))) {
             $language = config('locale.default', 'en');
         }
 
         return $language;
     }
 
-    public function detect(?string $language = null): string
+    public function detect($language = null)
     {
         if (isset($language)) {
             $language = strtolower($language);
@@ -57,7 +56,7 @@ class LanguageService extends BaseService implements LanguageServiceInterface
         }
         foreach ($languages as $lang => $val) {
             foreach (array_keys(config('locale.languages')) as $languageCode) {
-                if (str_starts_with($lang, $languageCode)) {
+                if (strpos($lang, $languageCode) === 0) {
                     return $languageCode;
                 }
             }

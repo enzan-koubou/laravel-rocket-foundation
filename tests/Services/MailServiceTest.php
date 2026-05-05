@@ -1,9 +1,8 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Services;
 
-namespace LaravelRocket\Foundation\Tests\Services;
-
-use LaravelRocket\Foundation\Services\MailServiceInterface;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Services\MailServiceInterface;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class MailServiceTest extends TestCase
 {

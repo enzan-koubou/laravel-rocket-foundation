@@ -1,84 +1,38 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories;
+declare(strict_types=1);
+
+namespace EnzanRocket\Foundation\Repositories;
+
+use EnzanRocket\Foundation\Models\Base;
+use Illuminate\Database\Eloquent\Collection;
 
 interface SingleKeyModelRepositoryInterface extends BaseRepositoryInterface
 {
-    /**
-     * @return array
-     */
-    public function getPrimaryKey();
+    public function getPrimaryKey(): string;
+
+    public function find(int|string $id): ?Base;
+
+    public function allByIds(array $ids, ?string $order = null, ?string $direction = null, bool $reorder = false): Collection;
+
+    public function countByIds(array $ids): int;
+
+    public function getByIds(array $ids, ?string $order = null, ?string $direction = null, ?int $offset = null, ?int $limit = null): Collection;
+
+    public function create(array $input): Base|false;
+
+    public function dryUpdate(Base $model, array $input): Base;
+
+    public function update(Base $model, array $input): Base|false;
+
+    public function save(Base $model): Base|false;
 
     /**
-     * @param  int  $id
-     * @return \LaravelRocket\Foundation\Models\Base|null
-     */
-    public function find($id);
-
-    /**
-     * @param  array  $ids
-     * @param  string|null  $order
-     * @param  string|null  $direction
-     * @param  bool  $reorder
-     * @return \LaravelRocket\Foundation\Models\Base[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function allByIds($ids, $order = null, $direction = null, $reorder = false);
-
-    /**
-     * @param  array  $ids
-     * @return int
-     */
-    public function countByIds($ids);
-
-    /**
-     * @param  array  $ids
-     * @param  string|null  $order
-     * @param  string|null  $direction
-     * @param  int|null  $offset
-     * @param  int|null  $limit
-     * @return \LaravelRocket\Foundation\Models\Base[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getByIds($ids, $order = null, $direction = null, $offset = null, $limit = null);
-
-    /**
-     * @param  array  $input
-     * @return \LaravelRocket\Foundation\Models\Base
-     */
-    public function create($input);
-
-    /**
-     * @param  \LaravelRocket\Foundation\Models\Base  $model
-     * @param  array  $input
-     * @return \LaravelRocket\Foundation\Models\Base
-     */
-    public function dryUpdate($model, $input);
-
-    /**
-     * @param  \LaravelRocket\Foundation\Models\Base  $model
-     * @param  array  $input
-     * @return \LaravelRocket\Foundation\Models\Base
-     */
-    public function update($model, $input);
-
-    /**
-     * @param  \LaravelRocket\Foundation\Models\Base  $model
-     * @return \LaravelRocket\Foundation\Models\Base
-     */
-    public function save($model);
-
-    /**
-     * @param  \LaravelRocket\Foundation\Models\Base  $model
+     * @param Base $model
+     *
      * @return bool
      */
-    public function delete($model);
+    public function delete(Base $model): bool;
 
-    /**
-     * @return bool
-     */
-    public function updateMultipleEntries(int $id, string $parentColumnName, string $targetColumnName, array $list);
-
-    /**
-     * @return bool
-     */
-    public function updateMultipleEntriesWithFilter(array $filter, string $targetColumnName, array $list);
+    public function updateMultipleEntries(int $id, string $parentColumnName, string $targetColumnName, array $list): bool;
 }

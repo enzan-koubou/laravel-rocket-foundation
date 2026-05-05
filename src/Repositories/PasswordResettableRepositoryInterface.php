@@ -1,7 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Repositories;
+namespace EnzanRocket\Foundation\Repositories;
 
 use Illuminate\Auth\Passwords\TokenRepositoryInterface;
 
-interface PasswordResettableRepositoryInterface extends TokenRepositoryInterface {}
+interface PasswordResettableRepositoryInterface extends TokenRepositoryInterface
+{
+}

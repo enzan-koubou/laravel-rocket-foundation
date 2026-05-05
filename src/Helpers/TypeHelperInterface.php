@@ -1,10 +1,22 @@
 <?php
-
-namespace LaravelRocket\Foundation\Helpers;
+namespace EnzanRocket\Foundation\Helpers;
 
 interface TypeHelperInterface
 {
-    public function getColumnTypeNameByValue(string $type, array $types, string $default = ''): string;
+    /**
+     * @param string $type
+     * @param array  $types
+     * @param string $default
+     *
+     * @return string
+     */
+    public function getColumnTypeNameByValue(string $type, array $types, $default = '');
 
-    public function getColumnTypes(string $table, string $column): array;
+    /**
+     * @param string $table
+     * @param string $column
+     *
+     * @return array
+     */
+    public function getColumnTypes(string $table, string $column);
 }

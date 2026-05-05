@@ -1,47 +1,37 @@
 <?php
-
-namespace LaravelRocket\Foundation\Models;
+namespace EnzanRocket\Foundation\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use LaravelRocket\Foundation\Presenters\BasePresenter;
+use EnzanRocket\Foundation\Presenters\BasePresenter;
 
 class Base extends Model
 {
-    protected ?BasePresenter $presenterInstance;
+    protected ?BasePresenter $presenterInstance = null;
 
-    protected string $presenter = BasePresenter::class;
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        $this->presenterInstance = null;
-    }
+    /** @var class-string<BasePresenter> */
+    protected $presenter = BasePresenter::class;
 
     public static function getTableName(): string
     {
-        return with(new static)->getTable();
+        return with(new static())->getTable();
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public static function getFillableColumns(): array
     {
-        return with(new static)->getFillable();
+        return with(new static())->getFillable();
     }
 
-    public function present()
+    public function present(): BasePresenter
     {
-        if (! $this->presenterInstance) {
+        if (!$this->presenterInstance) {
             $this->presenterInstance = new $this->presenter($this);
         }
 
         return $this->presenterInstance;
     }
 
-    /**
-     * @return string[]
-     */
+    /** @return string[] */
     public function getEditableColumns(): array
     {
         return $this->fillable;
@@ -52,21 +42,22 @@ class Base extends Model
         return $this->primaryKey;
     }
 
-    public function getLocalizedColumn(string $key, string $locale = 'en'): string
+    public function getLocalizedColumn(string $key, string $locale = 'en'): mixed
     {
         if (empty($locale)) {
             $locale = 'en';
         }
         $localizedKey = $key.'_'.strtolower($locale);
-        $value = $this->$localizedKey;
+        $value        = $this->$localizedKey;
         if (empty($value)) {
             $localizedKey = $key.'_en';
-            $value = $this->$localizedKey;
+            $value        = $this->$localizedKey;
         }
 
         return $value;
     }
 
+    /** @return array<string, mixed> */
     public function toFillableArray(): array
     {
         $ret = [];
@@ -77,11 +68,6 @@ class Base extends Model
         return $ret;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getDateColumns(): array
-    {
-        return $this->dates;
-    }
+    // REMOVED: getDateColumns() — accessed $this->dates which was removed in Laravel 10.
+    // Confirmed: no callers in any child model or service.
 }

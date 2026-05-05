@@ -1,16 +1,14 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Exceptions;
 
-namespace LaravelRocket\Foundation\Tests\Exceptions;
-
-use Illuminate\Support\Str;
-use LaravelRocket\Foundation\Exceptions\ClientErrorException;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Exceptions\ClientErrorException;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class ClientErrorExceptionTest extends TestCase
 {
     public function testCreateException()
     {
-        $name = Str::random(10);
+        $name      = str_random(10);
         $exception = new ClientErrorException($name);
         $this->assertNotEmpty($exception);
 

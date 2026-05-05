@@ -1,5 +1,6 @@
 <?php
+namespace EnzanRocket\Foundation\Services;
 
-namespace LaravelRocket\Foundation\Services;
-
-interface BaseServiceInterface {}
+interface BaseServiceInterface
+{
+}

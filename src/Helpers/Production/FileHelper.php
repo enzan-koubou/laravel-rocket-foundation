@@ -1,13 +1,11 @@
 <?php
+namespace EnzanRocket\Foundation\Helpers\Production;
 
-namespace LaravelRocket\Foundation\Helpers\Production;
-
-use Illuminate\Http\UploadedFile;
-use LaravelRocket\Foundation\Helpers\FileHelperInterface;
+use EnzanRocket\Foundation\Helpers\FileHelperInterface;
 
 class FileHelper implements FileHelperInterface
 {
-    public function getFileIconHTML(string $mimeType): string
+    public function getFileIconHTML($mimeType)
     {
         if (preg_match('/^([^\/]+)\/([^\/]+)$/', $mimeType, $matches)) {
             switch ($mimeType) {
@@ -46,19 +44,5 @@ class FileHelper implements FileHelperInterface
         }
 
         return '<i class="far fa-file"></i>';
-    }
-
-    public function detectFileType(UploadedFile $file): ?string
-    {
-        $mimeType = $file->getMimeType();
-
-        $types = config('file.acceptable');
-        foreach ($types as $name => $candidates) {
-            if (array_key_exists($mimeType, $candidates)) {
-                return $name;
-            }
-        }
-
-        return null;
     }
 }

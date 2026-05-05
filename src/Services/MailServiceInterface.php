@@ -1,10 +1,21 @@
 <?php
-
-namespace LaravelRocket\Foundation\Services;
+namespace EnzanRocket\Foundation\Services;
 
 interface MailServiceInterface extends BaseServiceInterface
 {
-    public function sendMail(string $title, ?array $from, array $to, string $template, array $data): bool;
+    /**
+     * @param string $title
+     * @param array  $from
+     * @param array  $to
+     * @param string $template
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function sendMail($title, $from, $to, $template, $data);
 
-    public function getDefaultSender(): array;
+    /**
+     * @return array
+     */
+    public function getDefaultSender();
 }

@@ -1,9 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Facades;
+namespace EnzanRocket\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use LaravelRocket\Foundation\Helpers\TypeHelperInterface;
+use EnzanRocket\Foundation\Helpers\TypeHelperInterface;
 
 class TypeHelper extends Facade
 {

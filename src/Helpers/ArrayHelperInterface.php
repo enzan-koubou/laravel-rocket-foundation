@@ -1,10 +1,14 @@
 <?php
-
-namespace LaravelRocket\Foundation\Helpers;
+namespace EnzanRocket\Foundation\Helpers;
 
 interface ArrayHelperInterface
 {
-    public function popWithKey(string $key, array &$array, mixed $default = null): mixed;
-
-    public function filterElements(array $array, array $keys, bool $removeEmptyElements = true): array;
+    /**
+     * @param string $key
+     * @param array  $array
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function popWithKey(string $key, array &$array, $default = null);
 }

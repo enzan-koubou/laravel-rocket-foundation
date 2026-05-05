@@ -1,15 +1,14 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Services;
 
-namespace LaravelRocket\Foundation\Tests\Services;
-
-use LaravelRocket\Foundation\Services\FileUploadServiceInterface;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Services\FileUploadServiceInterface;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class FileUploadServiceTest extends TestCase
 {
     public function testGetInstance()
     {
-        /** @var FileUploadServiceInterface $service */
+        /** @var FileUploadService $service */
         $service = app()->make(FileUploadServiceInterface::class);
         $this->assertNotNull($service);
     }

@@ -1,15 +1,14 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Helpers;
 
-namespace LaravelRocket\Foundation\Tests\Helpers;
-
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class RedirectHelperTest extends TestCase
 {
     public function testGetInstance()
     {
-        /** @var \LaravelRocket\Foundation\Helpers\RedirectHelperInterface $helper */
-        $helper = app()->make(\LaravelRocket\Foundation\Helpers\RedirectHelperInterface::class);
+        /** @var \EnzanRocket\Foundation\Helpers\RedirectHelperInterface $helper */
+        $helper = app()->make(\EnzanRocket\Foundation\Helpers\RedirectHelperInterface::class);
         $this->assertNotNull($helper);
     }
 }

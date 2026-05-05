@@ -1,11 +1,10 @@
 <?php
+namespace EnzanRocket\Foundation\Helpers\Production;
 
-namespace LaravelRocket\Foundation\Helpers\Production;
-
-use LaravelRocket\Foundation\Helpers\URLHelperInterface;
+use EnzanRocket\Foundation\Helpers\URLHelperInterface;
 
 // http://mio-koduki.blogspot.jp/2012/05/php-httpbuildurl.html
-if (! function_exists('http_build_url')) {
+if (!function_exists('http_build_url')) {
     define('HTTP_URL_REPLACE', 1);
     define('HTTP_URL_JOIN_PATH', 2);
     define('HTTP_URL_JOIN_QUERY', 4);
@@ -18,7 +17,7 @@ if (! function_exists('http_build_url')) {
     define('HTTP_URL_STRIP_FRAGMENT', 256);
     define('HTTP_URL_STRIP_ALL', 504);
 
-    function http_build_url(string $url, array $parts = [], int $flags = HTTP_URL_REPLACE, &$new_url = []): string
+    function http_build_url($url, $parts = [], $flags = HTTP_URL_REPLACE, &$new_url = [])
     {
         $key = ['user', 'pass', 'port', 'path', 'query', 'fragment'];
 
@@ -46,7 +45,7 @@ if (! function_exists('http_build_url')) {
                     $new_url['path'] = rtrim(preg_replace(
                         '#'.preg_quote(basename($new_url['path']), '#').'$#',
                         '',
-                        $new_url['path']
+                            $new_url['path']
                     ), '/').'/'.ltrim($parts['path'], '/');
                 } else {
                     $new_url['path'] = $parts['path'];
@@ -74,7 +73,7 @@ if (! function_exists('http_build_url')) {
 
 class URLHelper implements URLHelperInterface
 {
-    public function canonicalizeHost(string $url, ?string $locale = null): string
+    public function canonicalizeHost($url, $locale = null)
     {
         $host = config('app.host');
 
@@ -90,7 +89,7 @@ class URLHelper implements URLHelperInterface
         return $this->swapHost($url, $host);
     }
 
-    public function getHostWithLocale(?string $locale = null, ?string $host = null): string
+    public function getHostWithLocale($locale = null, $host = null)
     {
         if (empty($host)) {
             $host = config('app.host');
@@ -105,12 +104,12 @@ class URLHelper implements URLHelperInterface
         return $host;
     }
 
-    public function swapHost(string $url, string $host): string
+    public function swapHost($url, $host)
     {
         return http_build_url($url, ['host' => $host, 'port' => null]);
     }
 
-    public function normalizeUrlPath(string $urlPath): string
+    public function normalizeUrlPath($urlPath)
     {
         $urlPath = strtolower($urlPath);
         $urlPath = str_replace('_', '-', $urlPath);
@@ -119,10 +118,10 @@ class URLHelper implements URLHelperInterface
         return $urlPath;
     }
 
-    public function asset(string $path, string $type = 'user'): string
+    public function asset($path, $type = 'user')
     {
         $hash = config('asset.hash');
-        $url = asset('static/'.$type.'/'.$path);
+        $url  = asset('static/'.$type.'/'.$path);
 
         if (app()->environment() == 'local' || empty($hash)) {
             return $url;
@@ -131,7 +130,7 @@ class URLHelper implements URLHelperInterface
         return $url.'?'.$hash;
     }
 
-    public function elixir(string $path, string $type = 'user'): string
+    public function elixir($path, $type = 'user')
     {
         $url = elixir('static/'.$type.'/'.$path);
 

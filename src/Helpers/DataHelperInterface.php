@@ -1,10 +1,21 @@
 <?php
-
-namespace LaravelRocket\Foundation\Helpers;
+namespace EnzanRocket\Foundation\Helpers;
 
 interface DataHelperInterface
 {
-    public function getCountryName(string $countryCode, string $default = ''): string;
+    /**
+     * @param string $countryCode
+     * @param string $default
+     *
+     * @return mixed
+     */
+    public function getCountryName(string $countryCode, string $default = '');
 
-    public function getCurrencyName(string $currencyCode, string $default = ''): string;
+    /**
+     * @param string $currencyCode
+     * @param string $default
+     *
+     * @return mixed
+     */
+    public function getCurrencyName(string $currencyCode, string $default = '');
 }

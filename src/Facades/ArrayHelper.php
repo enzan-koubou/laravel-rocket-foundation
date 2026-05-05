@@ -1,9 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Facades;
+namespace EnzanRocket\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use LaravelRocket\Foundation\Helpers\ArrayHelperInterface;
+use EnzanRocket\Foundation\Helpers\ArrayHelperInterface;
 
 class ArrayHelper extends Facade
 {

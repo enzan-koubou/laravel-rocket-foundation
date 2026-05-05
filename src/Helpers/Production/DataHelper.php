@@ -1,15 +1,14 @@
 <?php
+namespace EnzanRocket\Foundation\Helpers\Production;
 
-namespace LaravelRocket\Foundation\Helpers\Production;
-
-use LaravelRocket\Foundation\Helpers\DataHelperInterface;
+use EnzanRocket\Foundation\Helpers\DataHelperInterface;
 
 class DataHelper implements DataHelperInterface
 {
-    public function getCountryName(string $countryCode, string $default = ''): string
+    public function getCountryName(string $countryCode, string $default = '')
     {
         $countryCode = strtoupper($countryCode);
-        $length = strlen($countryCode);
+        $length      = strlen($countryCode);
         if ($length !== 2 && $length !== 3) {
             return $default;
         }
@@ -22,10 +21,10 @@ class DataHelper implements DataHelperInterface
         return trans('data/countries.'.$key);
     }
 
-    public function getCurrencyName(string $currencyCode, string $default = ''): string
+    public function getCurrencyName(string $currencyCode, string $default = '')
     {
         $currencyCode = strtoupper($currencyCode);
-        $length = strlen($currencyCode);
+        $length       = strlen($currencyCode);
         if ($length !== 3) {
             return $default;
         }

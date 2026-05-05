@@ -1,5 +1,6 @@
 <?php
+namespace EnzanRocket\Foundation\Services;
 
-namespace LaravelRocket\Foundation\Services;
-
-interface FileUploadS3ServiceInterface extends FileUploadServiceInterface {}
+interface FileUploadS3ServiceInterface extends FileUploadServiceInterface
+{
+}

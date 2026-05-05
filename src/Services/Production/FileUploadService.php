@@ -1,19 +1,18 @@
 <?php
+namespace EnzanRocket\Foundation\Services\Production;
 
-namespace LaravelRocket\Foundation\Services\Production;
-
-use LaravelRocket\Foundation\Services\FileUploadServiceInterface;
+use EnzanRocket\Foundation\Services\FileUploadServiceInterface;
 
 class FileUploadService extends BaseService implements FileUploadServiceInterface
 {
-    public function upload(string $srcPath, string $mediaType, string $filename, array $attributes): array
+    public function upload($srcPath, $mediaType, $filename, $attributes)
     {
         return [
             'success' => false,
         ];
     }
 
-    public function delete(array $attributes): array
+    public function delete($attributes)
     {
         return [
             'success' => false,

@@ -1,34 +1,85 @@
 <?php
-
-namespace LaravelRocket\Foundation\Services;
-
-use LaravelRocket\Foundation\Models\AuthenticatableBase;
+namespace EnzanRocket\Foundation\Services;
 
 interface AuthenticatableServiceInterface extends BaseServiceInterface
 {
-    public function signInById(int $id): ?AuthenticatableBase;
+    /**
+     * @param int $id
+     *
+     * @return \EnzanRocket\Foundation\Models\AuthenticatableBase
+     */
+    public function signInById($id);
 
-    public function signIn(array $input): ?AuthenticatableBase;
+    /**
+     * @param array $input
+     *
+     * @return \EnzanRocket\Foundation\Models\AuthenticatableBase
+     */
+    public function signIn($input);
 
-    public function signUp(array $input): ?AuthenticatableBase;
+    /**
+     * @param array $input
+     *
+     * @return \EnzanRocket\Foundation\Models\AuthenticatableBase
+     */
+    public function signUp($input);
 
-    public function sendPasswordReset(string $email): bool;
+    /**
+     * @param string $email
+     *
+     * @return bool
+     */
+    public function sendPasswordReset($email);
 
-    public function signOut(): bool;
+    /**
+     * @return bool
+     */
+    public function signOut();
 
-    public function resignation(): bool;
+    /**
+     * @return bool
+     */
+    public function resignation();
 
-    public function setUser(AuthenticatableBase $user): void;
+    /**
+     * @param \EnzanRocket\Foundation\Models\AuthenticatableBase $user
+     */
+    public function setUser($user);
 
-    public function getUser(): ?AuthenticatableBase;
+    /**
+     * @return \EnzanRocket\Foundation\Models\AuthenticatableBase
+     */
+    public function getUser();
 
-    public function sendPasswordResetEmail(string $email): void;
+    /**
+     * @param string $email
+     */
+    public function sendPasswordResetEmail($email);
 
-    public function resetPassword(string $email, string $password, string $token): bool;
+    /**
+     * @param string $email
+     * @param string $password
+     * @param string $token
+     *
+     * @return bool
+     */
+    public function resetPassword($email, $password, $token);
 
-    public function isSignedIn(): bool;
+    /**
+     * @return bool
+     */
+    public function isSignedIn();
 
-    public function getGuardName(): string;
+    /**
+     * @return string
+     */
+    public function getGuardName();
 
-    public function createWithImageUrl(array $input, string $imageUrl): AuthenticatableBase;
+    /**
+     * @param array  $input
+     * @param string $imageUrl
+     *
+     * @return \EnzanRocket\Foundation\Models\AuthenticatableBase
+     */
+    public function createWithImageUrl($input, $imageUrl);
 }

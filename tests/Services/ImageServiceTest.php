@@ -1,9 +1,8 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Services;
 
-namespace LaravelRocket\Foundation\Tests\Services;
-
-use LaravelRocket\Foundation\Services\ImageServiceInterface;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Services\ImageServiceInterface;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class ImageServiceTest extends TestCase
 {

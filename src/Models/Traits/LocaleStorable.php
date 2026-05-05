@@ -1,22 +1,21 @@
 <?php
-
-namespace LaravelRocket\Foundation\Models\Traits;
+namespace EnzanRocket\Foundation\Models\Traits;
 
 /**
- * LaravelRocket\Foundation\Models\LocaleStorable.
+ * EnzanRocket\Foundation\Models\LocaleStorable.
  *
  * @property string $locale
  *
- * @method static \Illuminate\Database\Query\Builder|\LaravelRocket\Foundation\Models\Traits\LocaleStorable whereLocale($value)
+ * @method static \Illuminate\Database\Query\Builder|\EnzanRocket\Foundation\Models\Traits\LocaleStorable whereLocale($value)
  */
 trait LocaleStorable
 {
-    public function getLocale(): string
+    public function getLocale()
     {
         return $this->locale;
     }
 
-    public function setLocale($locale): void
+    public function setLocale($locale)
     {
         $this->locale = strtolower($locale);
         $this->save();

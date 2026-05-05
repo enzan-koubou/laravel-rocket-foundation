@@ -1,17 +1,18 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories\Eloquent;
+declare(strict_types=1);
+
+namespace EnzanRocket\Foundation\Repositories\Eloquent;
 
 use Illuminate\Auth\Passwords\DatabaseTokenRepository;
-use LaravelRocket\Foundation\Repositories\PasswordResettableRepositoryInterface;
+use Illuminate\Database\ConnectionInterface;
+use EnzanRocket\Foundation\Repositories\PasswordResettableRepositoryInterface;
 
 class PasswordResettableRepository extends DatabaseTokenRepository implements PasswordResettableRepositoryInterface
 {
     protected string $tableName = 'password_resets';
 
-    protected $hashKey = 'random';
-
-    protected $expires = 60;
+    protected int $expiresIn = 60;
 
     public function __construct()
     {
@@ -19,13 +20,13 @@ class PasswordResettableRepository extends DatabaseTokenRepository implements Pa
             $this->getDatabaseConnection(),
             app()['hash'],
             $this->tableName,
-            $this->hashKey,
-            $this->expires
+            (string) config('app.key'), // Use app key for token hashing — previously 'random' which was insecure
+            $this->expiresIn
         );
     }
 
-    protected function getDatabaseConnection()
+    protected function getDatabaseConnection(): ConnectionInterface
     {
-        return $connection = app()['db']->connection();
+        return app()['db']->connection();
     }
 }

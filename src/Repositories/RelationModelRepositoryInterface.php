@@ -1,41 +1,23 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories;
+declare(strict_types=1);
+
+namespace EnzanRocket\Foundation\Repositories;
+
+use EnzanRocket\Foundation\Models\Base;
+use Illuminate\Database\Eloquent\Collection;
 
 interface RelationModelRepositoryInterface extends SingleKeyModelRepositoryInterface
 {
-    /**
-     * @return array
-     */
-    public function getRelationKeys();
+    public function getRelationKeys(): array;
 
-    /**
-     * @return string
-     */
-    public function getParentKey();
+    public function getParentKey(): string;
 
-    /**
-     * @return string
-     */
-    public function getChildKey();
+    public function getChildKey(): string;
 
-    /**
-     * @param  int  $parentKey
-     * @param  int  $childKey
-     * @return \LaravelRocket\Foundation\Models\Base|null
-     */
-    public function findByRelationKeys($parentKey, $childKey);
+    public function findByRelationKeys(int|string $parentKey, int|string $childKey): ?Base;
 
-    /**
-     * @param  int  $parentKey
-     * @return \LaravelRocket\Foundation\Models\Base[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function allByParentKey($parentKey);
+    public function allByParentKey(int|string $parentKey): Collection;
 
-    /**
-     * @param  int  $parentKey
-     * @param  array  $childKeys
-     * @return bool
-     */
-    public function updateList($parentKey, $childKeys);
+    public function updateList(int|string $parentKey, array $childKeys): bool;
 }

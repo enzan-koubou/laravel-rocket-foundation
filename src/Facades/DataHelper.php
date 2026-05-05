@@ -1,9 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Facades;
+namespace EnzanRocket\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use LaravelRocket\Foundation\Helpers\DataHelperInterface;
+use EnzanRocket\Foundation\Helpers\DataHelperInterface;
 
 class DataHelper extends Facade
 {

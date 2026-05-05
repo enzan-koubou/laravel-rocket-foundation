@@ -1,33 +1,36 @@
 <?php
-
-namespace LaravelRocket\Foundation\Presenters;
+namespace EnzanRocket\Foundation\Presenters;
 
 class BasePresenter
 {
-    protected \LaravelRocket\Foundation\Models\Base $entity;
+    protected mixed $entity;
 
     protected string $toStringColumn = '';
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected array $multilingualFields = [];
 
-    public function __construct(\LaravelRocket\Foundation\Models\Base $entity)
+    public function __construct(mixed $entity)
     {
         $this->entity = $entity;
     }
 
     /**
-     * @return mixed
+     * Property access priority:
+     * 1. If a method with the same name exists on this Presenter, call it.
+     *    e.g. $presenter->type  →  calls $this->type()
+     * 2. If the property name is listed in $multilingualFields, delegate to
+     *    $this->entity->getLocalizedColumn($property).
+     * 3. Otherwise proxy directly to $this->entity->$property (Eloquent attribute).
+     *    No explicit fallback — missing attributes return null via Eloquent magic.
      */
-    public function __get(string $property)
+    public function __get(string $property): mixed
     {
         if (method_exists($this, $property)) {
             return $this->$property();
         }
 
-        if (in_array($property, $this->multilingualFields)) {
+        if (in_array($property, $this->multilingualFields, strict: true)) {
             return $this->entity->getLocalizedColumn($property);
         }
 
@@ -39,7 +42,7 @@ class BasePresenter
         $column = $this->toStringColumn;
 
         $value = $this->entity->$column;
-        if (! empty($value)) {
+        if (!empty($value)) {
             return $value;
         }
 

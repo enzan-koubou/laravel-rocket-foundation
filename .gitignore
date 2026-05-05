@@ -30,4 +30,3 @@ ingore.php
 public/static/swagger-ui
 
 /.php_cs.cache
-/.phpunit.result.cache

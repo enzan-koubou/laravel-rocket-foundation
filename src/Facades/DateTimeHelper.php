@@ -1,6 +1,5 @@
 <?php
-
-namespace LaravelRocket\Foundation\Facades;
+namespace EnzanRocket\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -8,6 +7,6 @@ class DateTimeHelper extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'LaravelRocket\Foundation\Helpers\DateTimeHelperInterface';
+        return 'EnzanRocket\Foundation\Helpers\DateTimeHelperInterface';
     }
 }

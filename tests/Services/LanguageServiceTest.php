@@ -1,9 +1,8 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Services;
 
-namespace LaravelRocket\Foundation\Tests\Services;
-
-use LaravelRocket\Foundation\Services\LanguageServiceInterface;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Services\LanguageServiceInterface;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class LanguageServiceTest extends TestCase
 {

@@ -1,17 +1,16 @@
 <?php
+namespace EnzanRocket\Foundation\Tests\Helpers;
 
-namespace LaravelRocket\Foundation\Tests\Helpers;
-
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class FileHelperTest extends TestCase
 {
     /**
-     * @return \LaravelRocket\Foundation\Helpers\FileHelperInterface
+     * @return \EnzanRocket\Foundation\Helpers\FileHelperInterface
      */
     protected function getInstance()
     {
-        $helper = app()->make(\LaravelRocket\Foundation\Helpers\FileHelperInterface::class);
+        $helper = app()->make(\EnzanRocket\Foundation\Helpers\FileHelperInterface::class);
 
         return $helper;
     }

@@ -1,13 +1,11 @@
 <?php
+namespace EnzanRocket\Foundation\Helpers\Production;
 
-namespace LaravelRocket\Foundation\Helpers\Production;
-
-use Illuminate\Database\Eloquent\Collection;
-use LaravelRocket\Foundation\Helpers\CollectionHelperInterface;
+use EnzanRocket\Foundation\Helpers\CollectionHelperInterface;
 
 class CollectionHelper implements CollectionHelperInterface
 {
-    public function getSelectOptions(Collection $collection): array
+    public function getSelectOptions($collection)
     {
         return $collection->pluck('name', 'id')->toArray();
     }

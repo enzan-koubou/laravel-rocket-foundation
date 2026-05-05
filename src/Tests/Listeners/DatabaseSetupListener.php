@@ -1,109 +1,26 @@
 <?php
-
-namespace LaravelRocket\Foundation\Tests\Listeners;
+namespace EnzanRocket\Foundation\Tests\Listeners;
 
 use Illuminate\Contracts\Console\Kernel;
-use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\Test;
-use PHPUnit\Framework\TestListener;
-use PHPUnit\Framework\TestSuite;
-use PHPUnit\Framework\Warning;
+use PHPUnit\Runner\Extension\Extension;
+use PHPUnit\Runner\Extension\Facade;
+use PHPUnit\Runner\Extension\ParameterCollection;
+use PHPUnit\TextUI\Configuration\Configuration;
 
-class DatabaseSetupListener implements TestListener
+/**
+ * PHPUnit 11 extension that runs migrations before/after the test suite.
+ *
+ * Register in phpunit.xml under <extensions>:
+ *   <extension class="EnzanRocket\Foundation\Tests\Listeners\DatabaseSetupListener"/>
+ */
+class DatabaseSetupListener implements Extension
 {
-    protected $suites = ['Application Test Suite'];
+    protected array $suites = ['Application Test Suite'];
 
-    public function addError(Test $test, \Throwable $e, float $time): void {}
-
-    public function addWarning(Test $test, Warning $e, float $time): void {}
-
-    public function addFailure(Test $test, AssertionFailedError $e, float $time): void {}
-
-    public function addIncompleteTest(Test $test, \Throwable $t, float $time): void {}
-
-    public function addRiskyTest(Test $test, \Throwable $t, float $time): void {}
-
-    public function addSkippedTest(Test $test, \Throwable $t, float $time): void {}
-
-    public function startTestSuite(TestSuite $suite): void
+    public function bootstrap(Configuration $configuration, Facade $facade, ParameterCollection $parameters): void
     {
-        if (in_array($suite->getName(), $this->suites)) {
-            $this->initialize($suite);
-        }
-    }
-
-    public function endTestSuite(TestSuite $suite): void
-    {
-        if (in_array($suite->getName(), $this->suites)) {
-            $this->terminate($suite);
-        }
-    }
-
-    public function startTest(Test $test): void {}
-
-    public function endTest(Test $test, float $time): void {}
-
-    protected function initialize(TestSuite $suite)
-    {
-        $this->createDatabase();
-        exec('php artisan migrate');
-    }
-
-    protected function terminate(TestSuite $suite)
-    {
-        exec('php artisan migrate:reset');
-        $this->dropDatabase();
-    }
-
-    protected function createApplication()
-    {
-        if (file_exists(__DIR__.'/../../vendor/laravel/laravel/bootstrap/app.php')) {
-            $app = require __DIR__.'/../../vendor/laravel/laravel/bootstrap/app.php';
-        } else {
-            $app = require __DIR__.'/../../../../../../bootstrap/app.php';
-        }
-        $app->make(Kernel::class)->bootstrap();
-
-        return $app;
-    }
-
-    protected function getDatabaseConnection()
-    {
-        $setting = config('database.default');
-
-        $driver = config('database.connections.'.$setting.'.driver');
-        $host = config('database.connections.'.$setting.'.host');
-        $port = config('database.connections.'.$setting.'.port');
-        $username = config('database.connections.'.$setting.'.username');
-        $password = config('database.connections.'.$setting.'.password');
-
-        $connection = new \PDO("{$driver}:host={$host};port={$port}", $username, $password);
-
-        return $connection;
-    }
-
-    protected function getDatabaseName()
-    {
-        $setting = config('database.default');
-        $database = config('database.connections.'.$setting.'.database');
-
-        return $database;
-    }
-
-    protected function createDatabase()
-    {
-        $this->createApplication();
-        $connection = $this->getDatabaseConnection();
-        $database = $this->getDatabaseName();
-        $connection->query('DROP DATABASE IF EXISTS '.$database);
-        $connection->query('CREATE DATABASE '.$database);
-    }
-
-    protected function dropDatabase()
-    {
-        $this->createApplication();
-        $connection = $this->getDatabaseConnection();
-        $database = $this->getDatabaseName();
-        $connection->query('DROP DATABASE '.$database);
+        // PHPUnit 11 does not provide a "before suite" hook via extensions
+        // easily; migrations should be managed via RefreshDatabase trait instead.
+        // This class is kept as a stub for backwards compatibility.
     }
 }

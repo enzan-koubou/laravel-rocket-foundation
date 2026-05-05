@@ -1,21 +1,14 @@
 <?php
 
-namespace LaravelRocket\Foundation\Repositories;
+declare(strict_types=1);
 
-use LaravelRocket\Foundation\Models\AuthenticatableBase;
+namespace EnzanRocket\Foundation\Repositories;
+
+use EnzanRocket\Foundation\Models\AuthenticatableBase;
 
 interface AuthenticatableRepositoryInterface extends SingleKeyModelRepositoryInterface
 {
-    /**
-     * @param  string  $email
-     * @return AuthenticatableBase|null
-     */
-    public function findByEmail($email);
+    public function findByEmail(string $email): ?AuthenticatableBase;
 
-    /**
-     * @param  AuthenticatableBase  $user
-     * @param  string  $password
-     * @return AuthenticatableBase
-     */
-    public function updateRawPassword($user, $password);
+    public function updateRawPassword(AuthenticatableBase $user, string $password): ?AuthenticatableBase;
 }

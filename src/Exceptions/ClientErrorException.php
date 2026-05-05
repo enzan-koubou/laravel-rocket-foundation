@@ -1,27 +1,27 @@
 <?php
-
-namespace LaravelRocket\Foundation\Exceptions;
+namespace EnzanRocket\Foundation\Exceptions;
 
 use Exception;
 
 class ClientErrorException extends Exception
 {
-    protected string $errorName = '';
+    /** @var string */
+    protected $errorName = '';
 
-    protected array $extraData = [];
+    protected $extraData = [];
 
-    protected array $config = [];
+    protected $config = [];
 
     /**
      * APIErrorException constructor.
      *
-     * @param  string  $error
-     * @param  string  $message
-     * @param  array  $extraData
+     * @param string $error
+     * @param string $message
+     * @param array  $extraData
      */
     public function __construct($error, $message = '', $extraData = [])
     {
-        $message = ! empty($message) ? $message : $error;
+        $message = !empty($message) ? $message : $error;
 
         $this->errorName = $error;
         $this->extraData = $extraData;

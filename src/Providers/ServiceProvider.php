@@ -1,22 +1,22 @@
 <?php
-
-namespace LaravelRocket\Foundation\Providers;
+namespace EnzanRocket\Foundation\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use LaravelRocket\Foundation\Auth\EloquentUserProvider;
-use LaravelRocket\Foundation\Console\Commands\ExportTableToFile;
-use LaravelRocket\Foundation\Console\Commands\ImportFileToTable;
-use LaravelRocket\Foundation\Console\Commands\SetAppName;
+use Illuminate\Support\Facades\Auth;
+use EnzanRocket\Foundation\Auth\EloquentUserProvider;
+use EnzanRocket\Foundation\Console\Commands\ExportTableToFile;
+use EnzanRocket\Foundation\Console\Commands\ImportFileToTable;
+use EnzanRocket\Foundation\Console\Commands\SetAppName;
 
 class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
         /* Auth */
-        \Auth::provider('rocket-eloquent', function ($app, array $config) {
+        Auth::provider('rocket-eloquent', function ($app, array $config) {
             return new EloquentUserProvider($app['hash'], $config['model']);
         });
     }
@@ -24,115 +24,110 @@ class ServiceProvider extends BaseServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
         /* Services */
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\MailServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\MailService::class
+            \EnzanRocket\Foundation\Services\MailServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\MailService::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\ImageServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\ImageService::class
+            \EnzanRocket\Foundation\Services\ImageServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\ImageService::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\LanguageServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\LanguageService::class
+            \EnzanRocket\Foundation\Services\LanguageServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\LanguageService::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\SlackServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\SlackService::class
+            \EnzanRocket\Foundation\Services\SlackServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\SlackService::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\FileUploadServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\FileUploadService::class
+            \EnzanRocket\Foundation\Services\FileUploadServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\FileUploadService::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\FileUploadS3ServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\FileUploadS3Service::class
+            \EnzanRocket\Foundation\Services\FileUploadS3ServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\FileUploadS3Service::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Services\FileUploadLocalServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\FileUploadLocalService::class
-        );
-
-        $this->app->singleton(
-            \LaravelRocket\Foundation\Services\ExportServiceInterface::class,
-            \LaravelRocket\Foundation\Services\Production\ExportService::class
+            \EnzanRocket\Foundation\Services\FileUploadLocalServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\FileUploadLocalService::class
         );
 
         /* Helpers */
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\DateTimeHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\DateTimeHelper::class
+            \EnzanRocket\Foundation\Helpers\DateTimeHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\DateTimeHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\LocaleHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\LocaleHelper::class
+            \EnzanRocket\Foundation\Helpers\LocaleHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\LocaleHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\URLHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\URLHelper::class
+            \EnzanRocket\Foundation\Helpers\URLHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\URLHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\CollectionHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\CollectionHelper::class
+            \EnzanRocket\Foundation\Helpers\CollectionHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\CollectionHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\StringHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\StringHelper::class
+            \EnzanRocket\Foundation\Helpers\StringHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\StringHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\PaginationHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\PaginationHelper::class
+            \EnzanRocket\Foundation\Helpers\PaginationHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\PaginationHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\TypeHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\TypeHelper::class
+            \EnzanRocket\Foundation\Helpers\TypeHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\TypeHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\RedirectHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\RedirectHelper::class
+            \EnzanRocket\Foundation\Helpers\RedirectHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\RedirectHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\DataHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\DataHelper::class
+            \EnzanRocket\Foundation\Helpers\DataHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\DataHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\FileHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\FileHelper::class
+            \EnzanRocket\Foundation\Helpers\FileHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\FileHelper::class
         );
 
         $this->app->singleton(
-            \LaravelRocket\Foundation\Helpers\ArrayHelperInterface::class,
-            \LaravelRocket\Foundation\Helpers\Production\ArrayHelper::class
+            \EnzanRocket\Foundation\Helpers\ArrayHelperInterface::class,
+            \EnzanRocket\Foundation\Helpers\Production\ArrayHelper::class
         );
 
         //Commands
-        $this->app->singleton('command.rocket.export.table', function ($app) {
+        $this->app->singleton('command.rocket.export.table', function($app) {
             return new ExportTableToFile($app['files']);
         });
 
-        $this->app->singleton('command.rocket.import.file', function ($app) {
+        $this->app->singleton('command.rocket.import.file', function($app) {
             return new ImportFileToTable($app['files']);
         });
 
-        $this->app->singleton('command.rocket.set.name', function ($app) {
+        $this->app->singleton('command.rocket.set.name', function($app) {
             return new SetAppName($app['files']);
         });
 

@@ -1,37 +1,37 @@
 <?php
+namespace EnzanRocket\Foundation\Services\Production;
 
-namespace LaravelRocket\Foundation\Services\Production;
-
-use Illuminate\Contracts\Auth\Guard;
+use EnzanRocket\Foundation\Repositories\AuthenticatableRepositoryInterface;
+use EnzanRocket\Foundation\Repositories\PasswordResettableRepositoryInterface;
+use EnzanRocket\Foundation\Services\AuthenticatableServiceInterface;
+use EnzanRocket\Foundation\Services\MailServiceInterface;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
-use LaravelRocket\Foundation\Models\AuthenticatableBase;
-use LaravelRocket\Foundation\Repositories\AuthenticatableRepositoryInterface;
-use LaravelRocket\Foundation\Repositories\PasswordResettableRepositoryInterface;
-use LaravelRocket\Foundation\Services\AuthenticatableServiceInterface;
-use LaravelRocket\Foundation\Services\MailServiceInterface;
 
 class AuthenticatableService extends BaseService implements AuthenticatableServiceInterface
 {
-    protected AuthenticatableRepositoryInterface $authenticatableRepository;
+    /** @var \EnzanRocket\Foundation\Repositories\AuthenticatableRepositoryInterface */
+    protected $authenticatableRepository;
 
-    protected PasswordResettableRepositoryInterface $passwordResettableRepository;
+    /** @var \EnzanRocket\Foundation\Repositories\PasswordResettableRepositoryInterface */
+    protected $passwordResettableRepository;
 
-    protected string $resetEmailTitle = 'Reset Password';
+    /** @var string $resetEmailTitle */
+    protected $resetEmailTitle = 'Reset Password';
 
-    protected string $resetEmailTemplate = '';
+    /** @var string $resetEmailTemplate */
+    protected $resetEmailTemplate = '';
 
     public function __construct(
         AuthenticatableRepositoryInterface $authenticatableRepository,
         PasswordResettableRepositoryInterface $passwordResettableRepository
     ) {
-        $this->authenticatableRepository = $authenticatableRepository;
+        $this->authenticatableRepository    = $authenticatableRepository;
         $this->passwordResettableRepository = $passwordResettableRepository;
     }
 
-    public function signInById(int $id): ?AuthenticatableBase
+    public function signInById($id)
     {
-        /** @var AuthenticatableBase $user */
+        /** @var \EnzanRocket\Foundation\Models\AuthenticatableBase $user */
         $user = $this->authenticatableRepository->find($id);
         if (empty($user)) {
             return null;
@@ -43,33 +43,36 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
     }
 
     /**
-     * @return Guard
+     * @return \Illuminate\Contracts\Auth\Guard
      */
     protected function getGuard()
     {
-        return Auth::guard($this->getGuardName());
+        return \Auth::guard($this->getGuardName());
     }
 
-    public function getGuardName(): string
+    /**
+     * @return string
+     */
+    public function getGuardName()
     {
-        return '';
+        return null;
     }
 
-    public function signIn(array $input): ?AuthenticatableBase
+    public function signIn($input)
     {
         $rememberMe = (bool) Arr::get($input, 'remember_me', 0);
-        $guard = $this->getGuard();
-        if (! $guard->attempt(['email' => $input['email'], 'password' => $input['password']], $rememberMe, true)) {
+        $guard      = $this->getGuard();
+        if (!$guard->attempt(['email' => Arr::get($input, 'email'), 'password' => Arr::get($input, 'password')], $rememberMe)) {
             return null;
         }
 
         return $guard->user();
     }
 
-    public function signUp(array $input): ?AuthenticatableBase
+    public function signUp($input)
     {
         $existingUser = $this->authenticatableRepository->findByEmail(Arr::get($input, 'email'));
-        if (! empty($existingUser)) {
+        if (!empty($existingUser)) {
             return null;
         }
 
@@ -83,12 +86,12 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
         return $guard->user();
     }
 
-    public function sendPasswordReset(string $email): bool
+    public function sendPasswordReset($email)
     {
         return false;
     }
 
-    public function signOut(): bool
+    public function signOut()
     {
         $user = $this->getUser();
         if (empty($user)) {
@@ -101,14 +104,14 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
         return true;
     }
 
-    public function getUser(): ?AuthenticatableBase
+    public function getUser()
     {
         $guard = $this->getGuard();
 
         return $guard->user();
     }
 
-    public function resignation(): bool
+    public function resignation()
     {
         $user = $this->getUser();
         if (empty($user)) {
@@ -122,11 +125,11 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
         return true;
     }
 
-    public function sendPasswordResetEmail(string $email): void
+    public function sendPasswordResetEmail($email)
     {
         $user = $this->authenticatableRepository->findByEmail($email);
         if (empty($user)) {
-            return;
+            return null;
         }
 
         $token = $this->passwordResettableRepository->create($user);
@@ -140,18 +143,18 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
             $this->resetEmailTemplate,
             [
                 'token' => $token,
-                'user' => $user,
+                'user'  => $user,
             ]
         );
     }
 
-    public function resetPassword(string $email, string $password, string $token): bool
+    public function resetPassword($email, $password, $token)
     {
         $user = $this->authenticatableRepository->findByEmail($email);
         if (empty($user)) {
             return false;
         }
-        if (! $this->passwordResettableRepository->exists($user, $token)) {
+        if (!$this->passwordResettableRepository->exists($user, $token)) {
             return false;
         }
         $this->authenticatableRepository->update($user, ['password' => $password]);
@@ -161,20 +164,20 @@ class AuthenticatableService extends BaseService implements AuthenticatableServi
         return true;
     }
 
-    public function setUser(AuthenticatableBase $user): void
+    public function setUser($user)
     {
         $guard = $this->getGuard();
         $guard->login($user);
     }
 
-    public function isSignedIn(): bool
+    public function isSignedIn()
     {
         $guard = $this->getGuard();
 
         return $guard->check();
     }
 
-    public function createWithImageUrl(array $input, string $imageUrl): AuthenticatableBase
+    public function createWithImageUrl($input, $imageUrl)
     {
         return $this->authenticatableRepository->create($input);
     }

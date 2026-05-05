@@ -1,10 +1,19 @@
 <?php
-
-namespace LaravelRocket\Foundation\Services;
+namespace EnzanRocket\Foundation\Services;
 
 interface LanguageServiceInterface extends BaseServiceInterface
 {
-    public function normalize(string $language): string;
+    /**
+     * @param string $language
+     *
+     * @return string
+     */
+    public function normalize($language);
 
-    public function detect(?string $language = null): string;
+    /**
+     * @param null|string $language
+     *
+     * @return string
+     */
+    public function detect($language = null);
 }

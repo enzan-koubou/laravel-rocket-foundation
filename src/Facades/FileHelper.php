@@ -1,9 +1,8 @@
 <?php
-
-namespace LaravelRocket\Foundation\Facades;
+namespace EnzanRocket\Foundation\Facades;
 
 use Illuminate\Support\Facades\Facade;
-use LaravelRocket\Foundation\Helpers\FileHelperInterface;
+use EnzanRocket\Foundation\Helpers\FileHelperInterface;
 
 class FileHelper extends Facade
 {
