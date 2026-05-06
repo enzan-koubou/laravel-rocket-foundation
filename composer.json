@@ -5,21 +5,21 @@
     "license": "MIT",
     "authors": [
         {
-            "name": "Takaaki Mizuno",
-            "email": "takaaki.mizuno@gmail.com"
+            "name": "Juyel",
+            "email": "juyel@enzan-k.com"
         }
     ],
     "require": {
         "php": "^8.4",
-        "icanboogie/inflector": "^2.0",
-        "aws/aws-sdk-php": "~3.24",
-        "laravel/framework": "^13.0"
+        "icanboogie/inflector": "^4.0.0",
+        "aws/aws-sdk-php": "~3.380.1",
+        "laravel/framework": "^13.8.0"
     },
     "require-dev": {
-        "mockery/mockery": "^1.6",
-        "phpunit/phpunit": "^11.0",
-        "friendsofphp/php-cs-fixer": "^3.0",
-        "fakerphp/faker": "^1.9"
+        "mockery/mockery": "^1.6.12",
+        "phpunit/phpunit": "^13.1.8",
+        "friendsofphp/php-cs-fixer": "^3.95.1",
+        "fakerphp/faker": "^1.24.1"
     },
     "autoload": {
         "psr-4": {
