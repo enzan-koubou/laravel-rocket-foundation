@@ -18,7 +18,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         session()->remove(static::PRESENTATION_TIME_ZONE_SESSION_KEY);
     }
 
-    public function dateTime($dateTimeStr, \DateTimeZone $timezoneFrom = null, \DateTimeZone $timezoneTo = null)
+    public function dateTime($dateTimeStr, ?\DateTimeZone $timezoneFrom = null, ?\DateTimeZone $timezoneTo = null)
     {
         $timezoneFrom = empty($timezoneFrom) ? $this->timezoneForPresentation() : $timezoneFrom;
         $timezoneTo   = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
@@ -29,8 +29,8 @@ class DateTimeHelper implements DateTimeHelperInterface
     public function dateTimeWithFormat(
         $format,
         $dateTimeStr,
-        \DateTimeZone $timezoneFrom = null,
-        \DateTimeZone $timezoneTo = null
+        ?\DateTimeZone $timezoneFrom = null,
+        ?\DateTimeZone $timezoneTo = null
     ) {
         $timezoneFrom = empty($timezoneFrom) ? $this->timezoneForPresentation() : $timezoneFrom;
         $timezoneTo   = empty($timezoneTo) ? $this->timezoneForStorage() : $timezoneTo;
@@ -58,7 +58,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         return new \DateTimeZone(config('app.timezone'));
     }
 
-    public function fromTimestamp($timeStamp, \DateTimeZone $timezone = null)
+    public function fromTimestamp($timeStamp, ?\DateTimeZone $timezone = null)
     {
         $timezone = empty($timezone) ? $this->timezoneForStorage() : $timezone;
 
@@ -68,7 +68,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $datetime;
     }
 
-    public function formatDate($dateTime, \DateTimeZone $timezone = null)
+    public function formatDate($dateTime, ?\DateTimeZone $timezone = null)
     {
         $viewDateTime = clone $dateTime;
         $timezone     = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
@@ -77,7 +77,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $viewDateTime->format('Y-m-d');
     }
 
-    public function formatTime($dateTime, \DateTimeZone $timezone = null)
+    public function formatTime($dateTime, ?\DateTimeZone $timezone = null)
     {
         $viewDateTime = clone $dateTime;
         $timezone     = empty($timezone) ? $this->timezoneForPresentation() : $timezone;
@@ -86,7 +86,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $viewDateTime->format('H:i');
     }
 
-    public function formatDateTime($dateTime, $format = 'Y-m-d H:i', \DateTimeZone $timezone = null)
+    public function formatDateTime($dateTime, $format = 'Y-m-d H:i', ?\DateTimeZone $timezone = null)
     {
         if (empty($dateTime)) {
             $dateTime = $this->now();
@@ -98,7 +98,7 @@ class DateTimeHelper implements DateTimeHelperInterface
         return $viewDateTime->format($format);
     }
 
-    public function now(\DateTimeZone $timezone = null)
+    public function now(?\DateTimeZone $timezone = null)
     {
         $timezone = empty($timezone) ? $this->timezoneForStorage() : $timezone;
 
