@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelRocket\Foundation\Exports;
+namespace EnzanRocket\Foundation\Exports;
 
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -11,12 +11,12 @@ class AdminModelExport implements FromQuery
 
     protected string $modelName;
 
-    protected \LaravelRocket\Foundation\Services\ExportServiceInterface $exportService;
+    protected \EnzanRocket\Foundation\Services\ExportServiceInterface $exportService;
 
     public function __construct(string $modelName)
     {
         $this->modelName = $modelName;
-        $this->exportService = app()->make(\LaravelRocket\Foundation\Services\ExportServiceInterface::class);
+        $this->exportService = app()->make(\EnzanRocket\Foundation\Services\ExportServiceInterface::class);
     }
 
     public function query(): mixed

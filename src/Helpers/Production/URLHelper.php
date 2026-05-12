@@ -132,7 +132,7 @@ class URLHelper implements URLHelperInterface
 
     public function elixir($path, $type = 'user')
     {
-        $url = elixir('static/'.$type.'/'.$path);
+        $url = mix('static/'.$type.'/'.$path);
 
         return $url;
     }

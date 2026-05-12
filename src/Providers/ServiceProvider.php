@@ -118,6 +118,11 @@ class ServiceProvider extends BaseServiceProvider
             \EnzanRocket\Foundation\Helpers\Production\ArrayHelper::class
         );
 
+        $this->app->singleton(
+            \EnzanRocket\Foundation\Services\ExportServiceInterface::class,
+            \EnzanRocket\Foundation\Services\Production\ExportService::class
+        );
+
         //Commands
         $this->app->singleton('command.rocket.export.table', function($app) {
             return new ExportTableToFile($app['files']);

@@ -12,8 +12,9 @@
     "require": {
         "php": "^8.4",
         "icanboogie/inflector": "^4.0.0",
-        "aws/aws-sdk-php": "~3.380.1",
-        "laravel/framework": "^13.8.0"
+        "aws/aws-sdk-php": "~3.380.3",
+        "laravel/framework": "^13.8.0",
+        "maatwebsite/excel": "^3.1.69"
     },
     "require-dev": {
         "mockery/mockery": "^1.6.12",

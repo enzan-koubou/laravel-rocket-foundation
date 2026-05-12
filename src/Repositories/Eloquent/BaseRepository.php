@@ -149,6 +149,13 @@ class BaseRepository implements BaseRepositoryInterface
         return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->toSql();
     }
 
+    public function allByFilterQuery(array $filter, ?string $order = null, ?string $direction = null): Builder
+    {
+        $query = $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter);
+
+        return $this->buildOrder($query, $filter, $order, $direction);
+    }
+
     public function deleteByFilter(array $filter): int
     {
         return $this->buildQueryByFilter($this->getBlankModel()->newQuery(), $filter)->delete();

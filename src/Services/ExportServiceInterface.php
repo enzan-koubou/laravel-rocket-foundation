@@ -1,15 +1,15 @@
 <?php
 
-namespace LaravelRocket\Foundation\Services;
+namespace EnzanRocket\Foundation\Services;
 
 interface ExportServiceInterface extends BaseServiceInterface
 {
-    public function getModel(string $modelName): ?\LaravelRocket\Foundation\Models\Base;
+    public function getModel(string $modelName): ?\EnzanRocket\Foundation\Models\Base;
 
-    public function getRepository(string $modelName): ?\LaravelRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository;
+    public function getRepository(string $modelName): ?\EnzanRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository;
 
     /**
-     * @param  \LaravelRocket\Foundation\Models\Base  $model
+     * @param  \EnzanRocket\Foundation\Models\Base  $model
      */
     public function selectColumns(\Illuminate\Database\Eloquent\Model $model): array;
 

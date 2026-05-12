@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace EnzanRocket\Foundation\Repositories;
 
 use EnzanRocket\Foundation\Models\Base;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 interface BaseRepositoryInterface
@@ -48,6 +49,8 @@ interface BaseRepositoryInterface
     public function updateByFilter(array $filter, array $values): int;
 
     public function getSQLByFilter(array $filter): string;
+
+    public function allByFilterQuery(array $filter, ?string $order = null, ?string $direction = null): Builder;
 
     public function deleteByFilter(array $filter): int;
 

@@ -1,27 +1,27 @@
 <?php
 
-namespace LaravelRocket\Foundation\Services\Production;
+namespace EnzanRocket\Foundation\Services\Production;
 
-use LaravelRocket\Foundation\Services\ExportServiceInterface;
+use EnzanRocket\Foundation\Services\ExportServiceInterface;
 
 class ExportService extends BaseService implements ExportServiceInterface
 {
     public function __construct() {}
 
-    public function getModel(string $modelName): ?\LaravelRocket\Foundation\Models\Base
+    public function getModel(string $modelName): ?\EnzanRocket\Foundation\Models\Base
     {
         $modelClass = '\\App\\Models\\'.$modelName;
         if (! class_exists($modelClass)) {
             return null;
         }
 
-        /** @var \LaravelRocket\Foundation\Models\Base $modelInstance */
+        /** @var \EnzanRocket\Foundation\Models\Base $modelInstance */
         $modelInstance = new $modelClass;
 
         return $modelInstance;
     }
 
-    public function getRepository(string $modelName): ?\LaravelRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository
+    public function getRepository(string $modelName): ?\EnzanRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository
     {
         $repositoryInterfaceClass = 'App\\Repositories\\'.$modelName.'RepositoryInterface';
 
@@ -29,7 +29,7 @@ class ExportService extends BaseService implements ExportServiceInterface
             return null;
         }
 
-        /** @var \LaravelRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository $repository */
+        /** @var \EnzanRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository $repository */
         $repository = app()->make($repositoryInterfaceClass);
 
         return $repository;

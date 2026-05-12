@@ -1,17 +1,12 @@
 <?php
 
-namespace LaravelRocket\Foundation\Providers;
+namespace EnzanRocket\Foundation\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class ProxyServiceProvider extends BaseServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     */
-    protected bool $defer = false;
-
     /**
      * Register the service provider.
      */

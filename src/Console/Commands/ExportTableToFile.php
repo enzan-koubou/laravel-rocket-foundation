@@ -3,7 +3,11 @@ namespace EnzanRocket\Foundation\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Maatwebsite\Excel\Excel;
+use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Excel as ExcelFormat;
 
 class ExportTableToFile extends Command
 {
@@ -59,7 +63,7 @@ class ExportTableToFile extends Command
                 }
             }
         }
-        $data = [];
+        $rows = [];
 
         $count  = \DB::table($tableName)->count();
         $limit  = 1000;
@@ -69,31 +73,39 @@ class ExportTableToFile extends Command
             foreach ($entities as $entity) {
                 $row = [];
                 foreach ($columnNames as $columnName) {
-                    $row[$columnName] = $entity->$columnName;
+                    $row[] = $entity->$columnName;
                 }
-                $data[] = $row;
+                $rows[] = $row;
             }
             $offset += $limit;
         }
 
-        /** @var Excel $excel */
-        $excel  = app()->make(Excel::class);
-        $output = $excel->create($outputPath, function($excel) use ($data, $tableName) {
-            $excel->sheet($tableName, function($sheet) use ($data) {
-                $sheet->setStyle([
-                    'font' => [
-                        'name' => 'Arial',
-                        'size' => 12,
-                        'bold' => false,
-                    ],
-                ]);
-                if (count($data) > 0) {
-                    $sheet->fromArray($data);
-                }
-            });
-        })->string($format);
+        $exporter = new class($rows, $tableName, $columnNames) implements FromArray, WithHeadings, WithTitle {
+            public function __construct(
+                private readonly array $rows,
+                private readonly string $sheetTitle,
+                private readonly array $columnNames
+            ) {}
 
-        $this->files->put($outputPath, $output);
+            public function array(): array
+            {
+                return $this->rows;
+            }
+
+            public function headings(): array
+            {
+                return $this->columnNames;
+            }
+
+            public function title(): string
+            {
+                return $this->sheetTitle;
+            }
+        };
+
+        $writerType = $format === 'xlsx' ? ExcelFormat::XLSX : ExcelFormat::CSV;
+        $content    = Excel::raw($exporter, $writerType);
+        $this->files->put($outputPath, $content);
 
         return true;
     }

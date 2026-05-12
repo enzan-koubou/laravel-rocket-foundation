@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelRocket\Foundation\Http\Requests\Traits;
+namespace EnzanRocket\Foundation\Http\Requests\Traits;
 
 trait PaginationTrait
 {

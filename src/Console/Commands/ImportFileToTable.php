@@ -3,7 +3,11 @@ namespace EnzanRocket\Foundation\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Maatwebsite\Excel\Excel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ImportFileToTable extends Command
 {
@@ -57,7 +61,7 @@ class ImportFileToTable extends Command
         }
         $defaultValues = [];
         foreach ($columnInformation as $entity) {
-            if ($entity->null === 'NO') {
+            if ($entity->Null === 'NO') {
                 $type = $entity->Type;
                 if (str_starts_with($type, 'varchar') || str_starts_with($type, 'char') || str_starts_with($type, 'text')) {
                     $defaultValues[$entity->Field] = '';
@@ -67,20 +71,38 @@ class ImportFileToTable extends Command
             }
         }
 
-        $excel = app()->make(Excel::class);
-        $excel->filter('chunk')->load($filePath)->chunk(250, function($results) use ($tableName, $columnNames, $defaultValues) {
-            foreach ($results as $row) {
-                $data = [];
-                foreach ($columnNames as $columnName) {
-                    if ($row->has($columnName) && !empty($row->get($columnName))) {
-                        $data[$columnName] = $row->get($columnName);
-                    } elseif (array_key_exists($columnName, $defaultValues)) {
-                        $data[$columnName] = $defaultValues[$columnName];
+        $importer = new class($tableName, $columnNames, $defaultValues) implements ToCollection, WithChunkReading, WithHeadingRow {
+            public function __construct(
+                private readonly string $tableName,
+                private readonly array $columnNames,
+                private readonly array $defaultValues
+            ) {}
+
+            public function collection(Collection $rows): void
+            {
+                foreach ($rows as $row) {
+                    $data = [];
+                    foreach ($this->columnNames as $columnName) {
+                        $value = $row[$columnName] ?? null;
+                        if (!empty($value)) {
+                            $data[$columnName] = $value;
+                        } elseif (array_key_exists($columnName, $this->defaultValues)) {
+                            $data[$columnName] = $this->defaultValues[$columnName];
+                        }
+                    }
+                    if (!empty($data)) {
+                        \DB::table($this->tableName)->insert($data);
                     }
                 }
-                \DB::table($tableName)->insert($data);
             }
-        });
+
+            public function chunkSize(): int
+            {
+                return 250;
+            }
+        };
+
+        Excel::import($importer, $filePath);
 
         return true;
     }

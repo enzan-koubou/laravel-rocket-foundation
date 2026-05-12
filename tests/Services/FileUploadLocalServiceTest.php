@@ -1,9 +1,9 @@
 <?php
 
-namespace LaravelRocket\Foundation\Tests\Services;
+namespace EnzanRocket\Foundation\Tests\Services;
 
-use LaravelRocket\Foundation\Services\FileUploadLocalServiceInterface;
-use LaravelRocket\Foundation\Tests\TestCase;
+use EnzanRocket\Foundation\Services\FileUploadLocalServiceInterface;
+use EnzanRocket\Foundation\Tests\TestCase;
 
 class FileUploadLocalServiceTest extends TestCase
 {

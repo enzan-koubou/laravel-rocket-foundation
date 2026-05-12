@@ -70,7 +70,7 @@ class SlackService extends BaseService implements SlackServiceInterface
         }
 
         $payload = [
-            'username'   => Arr::get($typeConfig, 'username', 'LaravelRocketBot'),
+            'username'   => Arr::get($typeConfig, 'username', 'EnzanRocketBot'),
             'channel'    => Arr::get($typeConfig, 'channel', '#random'),
             'icon_emoji' => Arr::get($typeConfig, 'icon', ':robot_face:'),
             'link_names' => true,
